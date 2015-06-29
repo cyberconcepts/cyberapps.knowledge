@@ -79,4 +79,10 @@
         factory="cyberapps.knowledge.browser.report.JobDescription"
         permission="zope.View" />
 
+  <browser:page
+        name="job_report.html"
+        for="cyberapps.knowledge.interfaces.IJobPosition"
+        class="cyberapps.knowledge.browser.report.JobReport"
+        permission="zope.View" />
+
 </configure>

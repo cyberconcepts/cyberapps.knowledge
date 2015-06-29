@@ -29,6 +29,7 @@ from cyberapps.knowledge.interfaces import IJPDescription, IIPSkillsRequired
 from cyberapps.knowledge.interfaces import IQualificationsRequired
 from cyberapps.knowledge.interfaces import IQualificationsRecorded
 from cyberapps.knowledge.interfaces import ISkillsRecorded
+from cybertools.organize.interfaces import IPerson
 from loops.common import AdapterBase, adapted
 from loops.concept import Concept
 from loops.interfaces import IConcept
@@ -46,6 +47,10 @@ TypeInterfaceSourceList.typeInterfaces += (
 class JobPosition(AdapterBase):
 
     implements(IJobPosition)
+
+    def getPersons(self):
+        result = [adapted(c) for c in self.context.getChildren()]
+        return [p for p in result if IPerson.providedBy(p)]
 
     def getJPDescription(self):
         for c in self.context.getChildren():

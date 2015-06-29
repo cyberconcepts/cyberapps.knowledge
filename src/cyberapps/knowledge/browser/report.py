@@ -23,7 +23,9 @@ Definition of classes for viewing reporting data in cyberapps.knowledge.
 from zope.app.pagetemplate import ViewPageTemplateFile
 from zope.cachedescriptors.property import Lazy
 
-from loops.common import adapted
+from loops.common import adapted, baseObject
+from loops.knowledge.survey.interfaces import IQuestionGroup
+from loops.knowledge.survey.response import Responses
 from loops import util
 from cyberapps.knowledge.browser.qualification import \
         JobPositionsOverview, PositionView, JPDescForm
@@ -49,16 +51,18 @@ class JobsListing(ReportBaseView, JobPositionsOverview):
         if instUid:
             return self.setInstitution(instUid)
 
+    def getItemUrl(self, item):
+        itemViewName = self.options('item_viewname')
+        baseUrl = self.nodeView.getUrlForTarget(item)
+        if itemViewName:
+            return '/'.join((baseUrl, itemViewName[0]))
+        return baseUrl
+
 
 class JobDescription(ReportBaseView, JPDescForm):
 
     macroName = 'jobdescription'
-
-    @Lazy
-    def breadcrumbsParent(self):
-        for p in self.context.conceptType.getParents([self.queryTargetPredicate]):
-            pass
-        return self.nodeView.getViewForTarget(p)
+    parentName = None
 
     def getData(self):
         self.setupController()
@@ -135,4 +139,73 @@ class JobDescription(ReportBaseView, JPDescForm):
                              description=child.description,
                              expected=row.get('expected') or 0))
             result['ipskills'].append(item)
+        return result
+
+
+class JobReport(ReportBaseView, PositionView):
+
+    macroName = 'job_report'
+    parentName = 'qkb'
+
+    selfInputQuestionnaire = None
+    selfInputData = None
+
+    def getData(self):
+        self.setupController()
+        #self.registerDojoSlider()
+        result = dict(qualifications=[], ipskills=[])
+        reqData = dict(qualifications={}, ipskills={})
+        persons = self.adapted.getPersons()
+        # load data
+        qureq = adapted(self.target).getQualificationsRequired()
+        if qureq is not None:
+            reqData['qualifications'] = qureq.requirements
+        skillsreq = adapted(self.target).getIPSkillsRequired()
+        if skillsreq is not None:
+            reqData['ipskills'] = skillsreq.requirements
+        ipskills = self.conceptManager['ipskills']
+        for parent in ipskills.getChildren([self.defaultPredicate]):
+            uid = util.getUidForObject(parent)
+            item = dict(uid=uid, label=parent.title, 
+                        description=parent.description, skills=[])
+            for child in parent.getChildren([self.defaultPredicate]):
+                uid = util.getUidForObject(child)
+                row = reqData['ipskills'].get(uid) or {}
+                if row.get('selected'):
+                    selfInput = self.getSelfInput(child, persons)
+                    item['skills'].append(
+                        dict(uid=uid, label=child.title,
+                             description=child.description,
+                             expected=int(row.get('expected') or 0) + 1,
+                             selfInput=selfInput))
+            result['ipskills'].append(item)
+        return result
+
+    def getSelfInput(self, competence, persons):
+        result = []
+        personUids = [p.uid for p in persons]
+        questionGroup = None
+        for c in baseObject(competence).getChildren():
+            qug = adapted(c)
+            if IQuestionGroup.providedBy(qug):
+                questionGroup = qug
+                break
+        if questionGroup is None:
+            return result
+        if self.selfInputQuestionnaire is None:
+            for qu in questionGroup.getQuestionnaires():
+                if qu.questionnaireType == 'standard':
+                    self.selfInputQuestionnaire = qu
+                    break
+        if self.selfInputData is None:
+            self.selfInputData = {}
+            for uid in personUids:
+                respManager = Responses(baseObject(self.selfInputQuestionnaire))
+                self.selfInputData[uid] = respManager.load(uid)
+        for uid in personUids:
+            data = self.selfInputData.get(uid)
+            if data is not None:
+                value = data.get(questionGroup.uid)
+                if value is not None:
+                    result.append(int(round(value * 4 + 1)))
         return result

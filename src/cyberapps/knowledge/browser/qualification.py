@@ -167,10 +167,17 @@ class JobPositionsOverview(QualificationBaseView, ConceptView):
 
 class PositionView(QualificationBaseView, ConceptView):
 
+    parentName = None
+
     @Lazy
     def breadcrumbsParent(self):
-        for p in self.context.conceptType.getParents([self.queryTargetPredicate]):
-            return self.nodeView.getViewForTarget(p)
+        parent = None
+        if self.parentName is not None:
+            parent = self.conceptManager.get(self.parentName)
+        if parent is None:
+            for p in self.context.conceptType.getParents([self.queryTargetPredicate]):
+                parent = p
+        return self.nodeView.getViewForTarget(parent)
 
     def copyUrl(self):
         return '%s/copy_jpprofiles' % (self.nodeView.getUrlForTarget(self.context))
@@ -257,6 +264,7 @@ class JPDescForm(PositionView):
     macroName = 'jpdescform'
     textKeys = ['administrative', 'workdesc', 'footer']
     textParentName = 'jpdescription'
+    parentName = 'data_entry'
 
     def getData(self):
         self.setupController()
@@ -328,6 +336,7 @@ class QualificationsForm(PositionView):
     macroName = 'qualificationsform'
     textKeys = ['1', '2']
     textParentName = 'qualificationsrequired'
+    parentName = 'data_entry'
 
     def getData(self):
         self.setupController()
@@ -388,6 +397,7 @@ class IPSkillsForm(PositionView):
     macroName = 'ipskillsform'
     textKeys = ['1', '2']
     textParentName = 'ipskillsrequired'
+    parentName = 'data_entry'
 
     def getData(self):
         self.setupController()
