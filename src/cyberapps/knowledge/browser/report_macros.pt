@@ -181,7 +181,10 @@
   <div tal:define="data item/getData;
                    texts item/getTexts">
     <tal:ipskills define="fname string:ipskills">
+      <script lang="javascript">
+      </script>
       <table style="width: 100%">
+        <div id="chartNode" style="width: 450px" />
         <tal:group repeat="parent data/?fname">
           <tr>
             <td style="padding-top: 15px; padding-bottom: 8px; font-size: 120%">
@@ -191,13 +194,14 @@
           </tr>
           <tr style="border-top: 1px solid #dddddd; border-bottom: 1px solid #dddddd"
               tal:repeat="child parent/skills">
-            <td style="width: 70%; vertical-align: top"
+            <td style="width: 30%; vertical-align: top"
                 tal:content="child/label"
                 tal:attributes="title child/description" />
+            <td style="width: 10%">
+              <span tal:content="child/expected" />
+            </td>
             <td style="width: 10%"
-                tal:content="child/expected" />
-            <td style="width: 10%"
-                tal:content="child/selfInput" />
+                tal:content="python: ', '.join([str(i) for i in child['selfInput']])" />
           </tr>
         </tal:group>
       </table>

@@ -101,6 +101,14 @@ class QualificationBaseView(InstitutionMixin):
         self.controller.macros.register('js-execute', 
                 'dojo.require.HorizontalSlider', jsCall=jsCall)
 
+    def registerDojoCharting(self):
+        self.registerDojo()
+        jsCall = ('dojo.require("dojox.charting.Chart");'
+                  'dojo.require("dojox.charting.plot2d.ClusteredBars");'
+                  'dojo.require("dojox.charting.themes.Claro");')
+        self.controller.macros.register('js-execute', 
+                'dojo.require.Charting', jsCall=jsCall)
+
     def processStateTransition(self, obj):
         stf = component.getAdapter(baseObject(obj), IStateful, 
                                    name='task_states')

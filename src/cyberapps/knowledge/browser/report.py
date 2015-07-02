@@ -152,7 +152,7 @@ class JobReport(ReportBaseView, PositionView):
 
     def getData(self):
         self.setupController()
-        #self.registerDojoSlider()
+        self.registerDojoCharting()
         result = dict(qualifications=[], ipskills=[])
         reqData = dict(qualifications={}, ipskills={})
         persons = self.adapted.getPersons()
