@@ -202,10 +202,12 @@ class JobReport(ReportBaseView, PositionView):
             for uid in personUids:
                 respManager = Responses(baseObject(self.selfInputQuestionnaire))
                 self.selfInputData[uid] = respManager.load(uid)
-        for uid in personUids:
+        for idx, uid in enumerate(personUids):
+            person = persons[idx]
             data = self.selfInputData.get(uid)
             if data is not None:
                 value = data.get(questionGroup.uid)
                 if value is not None:
-                    result.append(int(round(value * 4 + 1)))
+                    result.append(dict(name=person.title, 
+                                       value=int(round(value * 4 + 1))))
         return result

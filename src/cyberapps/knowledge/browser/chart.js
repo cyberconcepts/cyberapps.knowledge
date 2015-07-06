@@ -1,6 +1,8 @@
 /* <script> */
         chartData1 = [4, 5, 3];
         chartData2 = [3, 3, 1];
+
+function drawBars() {
         require([
             "dojox/charting/Chart", "dojox/charting/plot2d/ClusteredBars",
             "dojox/charting/themes/Claro", "dojox/charting/axis2d/Default",
@@ -26,4 +28,5 @@
                       stroke: {color: "red", width: 2}, fill: "#ffaaaa"});
               chart.render();
         });
+}
 /* </script> */

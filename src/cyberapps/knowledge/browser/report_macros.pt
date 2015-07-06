@@ -186,23 +186,62 @@
       <table style="width: 100%">
         <div id="chartNode" style="width: 450px" />
         <tal:group repeat="parent data/?fname">
+          <tr><td colspan="3" />&nbsp;</tr>
           <tr>
-            <td style="padding-top: 15px; padding-bottom: 8px; font-size: 120%">
+            <td style="padding-bottom: 6px; font-size: 120%">
               <b tal:content="parent/label" /></td>
             <td style="vertical-align: bottom"></td>
-            <td style="vertical-align: bottom; text-align: right"></td>
-          </tr>
-          <tr style="border-top: 1px solid #dddddd; border-bottom: 1px solid #dddddd"
-              tal:repeat="child parent/skills">
-            <td style="width: 30%; vertical-align: top"
-                tal:content="child/label"
-                tal:attributes="title child/description" />
-            <td style="width: 10%">
-              <span tal:content="child/expected" />
+            <td style="vertical-align: bottom; text-align: right; 
+                       position: relative;
+                       padding: 0">
+              <table width="100%">
+                <tr>
+                  <td style="border-left: 1px solid #dddddd;
+                             border-right: 1px solid #dddddd;
+                             text-align: center"
+                      tal:repeat="num python:range(1, 6)"
+                      tal:content="num"></td></tr></table>
             </td>
-            <td style="width: 10%"
-                tal:content="python: ', '.join([str(i) for i in child['selfInput']])" />
           </tr>
+          <tal:child repeat="child parent/skills">
+            <tr style="border-top: 1px solid #dddddd">
+              <td style="vertical-align: top; padding-top: 0; padding-bottom: 0"
+                  tal:content="child/label"
+                  tal:attributes="title child/description" />
+              <td style="padding-top: 0; padding-bottom: 0">
+                <div i18n:translate="ipskills_required">Required</div>
+              </td>
+              <td style="width: 200px; padding: 0">
+                <table width="100%">
+                  <tr>
+                    <td style="border-left: 1px solid #dddddd;
+                               border-right: 1px solid #dddddd;
+                               text-align: center; width: 20%; padding: 0"
+                        tal:repeat="num python:range(1, 6)"
+                        tal:content="python:child['expected'] == num and 'O' or ''" />
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr tal:repeat="row child/selfInput"
+                tal:attributes="style python:
+                      repeat['row'].end and 'border-bottom: 1px solid #dddddd'">
+              <td />
+              <td style="padding-top: 0; padding-bottom: 0"
+                  tal:content="row/name" />
+              <td style="width: 200px; padding: 0">
+                <table width="100%">
+                  <tr>
+                    <td style="border-left: 1px solid #dddddd;
+                               border-right: 1px solid #dddddd;
+                               text-align: center; width: 20%; padding: 0"
+                        tal:repeat="num python:range(1, 6)"
+                        tal:content="python:row['value'] == num and 'X' or ''" />
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tal:child>
         </tal:group>
       </table>
     </tal:ipskills>
