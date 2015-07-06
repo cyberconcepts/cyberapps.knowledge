@@ -154,7 +154,10 @@
             <input type="checkbox" value="yes"
                    tal:condition="row/optional"
                    tal:attributes="name string:$fname.inactive:records;
-                                   checked row/inactive" />
+                                   checked row/inactive;
+                                   onclick string:
+                      dojo.byId('${fname}_${repeat/row/index}').disabled = 
+                            this.checked" />
           </td>
           <td tal:attributes="class python:row['optional'] and 'optional' or None">
             <div class="label" tal:content="row/label" />
@@ -164,7 +167,8 @@
           <td class="input" width="60%">
             <textarea tal:attributes="name string:$fname.text:records;
                                       disabled python:
-                              row['inactive'] and 'true' or None"
+                              row['inactive'] and 'true' or None;
+                                      id string:${fname}_${repeat/row/index}"
                       tal:content="row/text"></textarea>
           </td>
         </tr>

@@ -148,7 +148,7 @@
                 <tr>
                   <td style="border-left: 1px solid #dddddd;
                              border-right: 1px solid #dddddd;
-                             text-align: center; width: 20%; padding: 0"
+                             text-align: center; width: 20%; padding: 2px"
                       tal:repeat="num python:range(5)"
                       tal:content="python:
                               int(child['expected']) == num and (num+1) or ''"
