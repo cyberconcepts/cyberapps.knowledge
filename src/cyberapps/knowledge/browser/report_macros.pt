@@ -138,31 +138,23 @@
           </tr>
           <tr style="border-top: 1px solid #dddddd; border-bottom: 1px solid #dddddd"
               tal:repeat="child parent/skills">
-            <td style="width: 70%; vertical-align: top"
+            <td style="width: 70%; vertical-align: top;
+                       padding-top: 0; padding-bottom: 0"
                 tal:content="child/label"
                 tal:attributes="title child/description" />
             <td colspan="2"
-                style="width: 30%; padding-top: 10px">
-              <div data-dojo-type="dijit/form/HorizontalSlider"
-                   tal:define="disabled string:true;
-                               props string:value:${child/expected}, 
-                      minimum:0, maximum:4,
-                      discreteValues:5, intermediateChanges:true,
-                      showButtons:false,
-                      disabled:$disabled"
-                   tal:attributes="id string:${fname}_expected_${child/uid};
-                                   name string:$fname.expected:records;
-                                   data-dojo-props props">
-                <div data-dojo-type="dijit/form/HorizontalRule" 
-                     container="bottomDecoration"
-                     count="5" style="height:5px;"></div>
-                <ol data-dojo-type="dijit/form/HorizontalRuleLabels" 
-                    container="bottomDecoration"
-                    style="height:1.5em;font-size:75%;color:gray;">
-                  <li tal:repeat="v python:range(1, 6)"
-                      tal:content="v" />
-                </ol>
-              </div>
+                style="width: 200px; padding: 0">
+              <table width="100%">
+                <tr>
+                  <td style="border-left: 1px solid #dddddd;
+                             border-right: 1px solid #dddddd;
+                             text-align: center; width: 20%; padding: 0"
+                      tal:repeat="num python:range(5)"
+                      tal:content="python:
+                              int(child['expected']) == num and (num+1) or ''"
+                      xtal:content="child/expected" />
+                </tr>
+              </table>
             </td>
           </tr>
         </tal:group>
@@ -192,7 +184,6 @@
               <b tal:content="parent/label" /></td>
             <td style="vertical-align: bottom"></td>
             <td style="vertical-align: bottom; text-align: right; 
-                       position: relative;
                        padding: 0">
               <table width="100%">
                 <tr>
