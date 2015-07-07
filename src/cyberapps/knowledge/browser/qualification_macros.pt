@@ -156,8 +156,8 @@
                    tal:attributes="name string:$fname.inactive:records;
                                    checked row/inactive;
                                    onclick string:
-                      dojo.byId('${fname}_${repeat/row/index}').disabled = 
-                            this.checked" />
+                      dojo.byId('${fname}_${repeat/row/index}').setAttribute('style',
+                            'display: ' + (this.checked ? 'none' : 'auto'))" />
           </td>
           <td tal:attributes="class python:row['optional'] and 'optional' or None">
             <div class="label" tal:content="row/label" />
@@ -166,9 +166,9 @@
           </td>
           <td class="input" width="60%">
             <textarea tal:attributes="name string:$fname.text:records;
-                                      disabled python:
-                              row['inactive'] and 'true' or None;
-                                      id string:${fname}_${repeat/row/index}"
+                                      id string:${fname}_${repeat/row/index};
+                                      style python:'display: ' +
+                              (row['inactive'] and 'none' or 'auto')"
                       tal:content="row/text"></textarea>
           </td>
         </tr>
@@ -195,24 +195,31 @@
                 <input type="checkbox" value="yes" class="noprint"
                        tal:condition="row/optional"
                        tal:attributes="name string:$fname.inactive:records;
-                                       checked row/inactive" />
+                                       checked row/inactive;
+                                   onclick string:
+                      dojo.byId('${fname}_${repeat/row/index}').setAttribute('style',
+                            'display: ' + (this.checked ? 'none' : 'auto'))" />
                 <span class="label"
                       tal:content="row/label" />:
                 <div class="description noprint"
                      tal:content="row/desc" />
               </td>
             </tr>
-            <tr class="grid"
-                tal:repeat="textRow python:range(5)">
-              <td class="center" style="width: 2em"
-                  tal:define="number python:textRow + 1"
-                  tal:content="string:$number.">1.</td>
-              <td class="input">
-                <input tal:attributes="name string:$fname.text:list:records;
-                                       value python:row['text'][textRow];
-                                       disabled python:
-                              row['inactive'] and 'true' or None" /></td>
-            </tr>
+            <tbody tal:attributes="id string:${fname}_${repeat/row/index};
+                                   style python:'display: ' +
+                          (row['inactive'] and 'none' or 'auto')">
+              <tr class="grid"
+                  tal:repeat="textRow python:range(5)">
+                <td class="center" style="width: 2em"
+                    tal:define="number python:textRow + 1"
+                    tal:content="string:$number.">1.</td>
+                <td class="input">
+                  <input tal:attributes="name string:$fname.text:list:records;
+                                         value python:row['text'][textRow];
+                                         disabled python:
+                                row['inactive'] and 'true' or None" /></td>
+              </tr>
+            </tbody>
             <tr>
               <td tal:condition="nothing" colspan="2">
                 <button onclick="return false;">+</button></td></tr>
@@ -339,7 +346,10 @@
                                    value child/uid;" />
             <input type="checkbox" value="yes"
                    tal:attributes="name string:$fname.selected:records;
-                                   checked child/selected" />
+                                   checked child/selected;
+                                   onclick string:
+                      dojo.byId('${fname}_expected_${child/uid}').setAttribute('style',
+                            'display: ' + (this.checked ? 'auto' : 'none'))" />
           </td>
           <td style="width: 60%; vertical-align: top"
               tal:content="child/label"
@@ -351,11 +361,12 @@
                              props string:value:${child/expected}, 
                     minimum:0, maximum:4,
                     discreteValues:5, intermediateChanges:true,
-                    showButtons:false,
-                    disabled:$disabled"
+                    showButtons:false"
                  tal:attributes="id string:${fname}_expected_${child/uid};
                                  name string:$fname.expected:records;
-                                 data-dojo-props props">
+                                 data-dojo-props props;
+                                 style python:'display: ' +
+                          (child['selected'] and 'auto' or 'none')">
               <div data-dojo-type="dijit/form/HorizontalRule" 
                    container="bottomDecoration"
                    count="5" style="height:5px;"></div>
