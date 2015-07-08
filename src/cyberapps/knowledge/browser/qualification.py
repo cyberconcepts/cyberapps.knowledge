@@ -408,6 +408,8 @@ class IPSkillsForm(PositionView):
     textParentName = 'ipskillsrequired'
     parentName = 'data_entry'
 
+    numberSelected = 0
+
     def getData(self):
         self.setupController()
         form = self.request.form
@@ -437,6 +439,9 @@ class IPSkillsForm(PositionView):
                 #skill = adapted(child)
                 uid = util.getUidForObject(child)
                 row = data.get(uid) or {}
+                selected = row.get('selected')
+                if selected:
+                    self.numberSelected += 1
                 item['skills'].append(
                     dict(uid=uid, label=child.title,
                          description=child.description,

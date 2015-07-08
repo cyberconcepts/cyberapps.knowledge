@@ -333,6 +333,18 @@
               condition="info">
       <div tal:content="structure info/text" />
     </tal:text>
+    <div>
+      <span i18n:translate="label_ipskills_number_selected">
+        Number of currently selected skills:</span>
+      <span id="ipskills_number_selected"
+            tal:content="item/numberSelected" />
+    </div>
+    <script>
+      function updateNumberSelected(obj) {
+        var node = dojo.byId('ipskills_number_selected').childNodes[0];
+        node.textContent = parseInt(node.textContent) + (obj.checked ? 1 : -1);
+      }
+    </script>
     <table style="width: auto"
            tal:define="fname string:ipskills">
       <tal:group repeat="parent data">
@@ -355,7 +367,8 @@
                                    checked child/selected;
                                    onclick string:
                       dojo.byId('${fname}_expected_${child/uid}').setAttribute('style',
-                            'display: ' + (this.checked ? 'auto' : 'none'))" />
+                            'display: ' + (this.checked ? 'auto' : 'none'));;
+                      updateNumberSelected(this);;" />
           </td>
           <td style="width: 60%; vertical-align: top"
               tal:content="child/label"
