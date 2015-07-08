@@ -139,6 +139,7 @@ class QualificationBaseView(InstitutionMixin):
 class JobPositionsOverview(QualificationBaseView, ConceptView):
 
     macroName = 'jobpositions'
+    textParentName = 'data_entry'
 
     def update(self):
         form = self.request.form

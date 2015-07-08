@@ -5,7 +5,8 @@
                     tal:define="dummy item/update">
   <metal:block use-macro="view/concept_macros/concepttitle" />
   <metal:buttons use-macro="item/knowledge_macros/select_institution" />
-  <form method="post">
+  <form method="post"
+        tal:define="texts item/getTexts">
     <table class="grid">
       <tr>
         <th i18n:translate="">label_jobposition_title</th>
@@ -78,6 +79,11 @@
     </table>
     <div><br />
       <h3 i18n:translate="">Create a New Job / Position</h3>
+      <tal:text define="info texts/1|nothing"
+                condition="info">
+        <div class="noprint"
+             tal:content="structure info/text" />
+      </tal:text>
       <span  i18n:translate="">label_jobposition_title</span>:
       <select data-dojo-type="dijit/form/ComboBox" 
               id="form_jptitle" name="form_jptitle">
