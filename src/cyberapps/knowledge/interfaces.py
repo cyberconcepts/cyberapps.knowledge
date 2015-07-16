@@ -26,6 +26,7 @@ from zope import schema
 
 from cybertools.composer.schema.grid.interfaces import KeyTable
 from loops.interfaces import ILoopsAdapter
+from loops.knowledge.survey.interfaces import IQuestionnaire
 from loops.table import IDataTable
 from loops.util import _
 
@@ -74,3 +75,9 @@ class ISkillsRecorded(ILoopsAdapter):
 
     data = Attribute('Skills recorded for person.')
 
+
+
+class IIPSkillsQuestionnaire(IQuestionnaire):
+    """ Allow specialized questionnaire implementation that limits
+        question groups according to competences required for person.
+    """

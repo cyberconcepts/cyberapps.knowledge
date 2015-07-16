@@ -48,6 +48,12 @@ Person data
   >>> from cyberapps.knowledge.browser.person import JobPersonsOverview
 
 
+Competences Questionnaire
+=========================
+
+  >>> from cyberapps.knowledge.data import IPSkillsQuestionnaire
+
+
 Reporting
 =========
 

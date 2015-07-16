@@ -23,25 +23,31 @@ Classes for Knowledge and Skills Management.
 from zope.app.container.interfaces import INameChooser
 from zope.component import adapts
 from zope.interface import implements
+from zope.traversing.api import getName
 
 from cyberapps.knowledge.interfaces import IJobPosition, IQualification
 from cyberapps.knowledge.interfaces import IJPDescription, IIPSkillsRequired
 from cyberapps.knowledge.interfaces import IQualificationsRequired
 from cyberapps.knowledge.interfaces import IQualificationsRecorded
 from cyberapps.knowledge.interfaces import ISkillsRecorded
+from cyberapps.knowledge.interfaces import IIPSkillsQuestionnaire
 from cybertools.organize.interfaces import IPerson
-from loops.common import AdapterBase, adapted
+from loops.common import AdapterBase, adapted, baseObject
 from loops.concept import Concept
 from loops.interfaces import IConcept
+from loops.knowledge.survey.base import Questionnaire
+from loops.organize.party import getPersonForUser
 from loops.setup import addObject
 from loops.table import DataTable
 from loops.type import TypeInterfaceSourceList
+from loops import util
 
 
 TypeInterfaceSourceList.typeInterfaces += (
         IJobPosition, IJPDescription, IIPSkillsRequired, 
         IQualificationsRequired, IQualification,
-        IQualificationsRecorded, ISkillsRecorded)
+        IQualificationsRecorded, ISkillsRecorded,
+        IIPSkillsQuestionnaire)
 
 
 class JobPosition(AdapterBase):
@@ -147,3 +153,45 @@ class SkillsRecorded(AdapterBase):
                             list(ISkillsRecorded))
 
 
+class IPSkillsQuestionnaire(Questionnaire):
+
+    implements(IIPSkillsQuestionnaire)
+
+    def getQuestionGroups(self, personId=None):
+        if personId is None:
+            person = getPersonForUser(self.context)
+        else:
+            person = util.getObjectForUid(personId)
+        result = []
+        required = self.getRequiredIPSkills(person)
+        groups = super(IPSkillsQuestionnaire, self).getQuestionGroups()
+        if not required:
+            return groups
+        for group in groups:
+            skills = self.getIPSkillsForGroup(group)
+            if skills:
+                for skill in skills:
+                    if skill in required:
+                        result.append(group)
+                        break
+            else:
+                result.append(group)
+        return result
+
+    def getIPSkillsForGroup(self, group):
+        result = []
+        for p in baseObject(group).getParents():
+            if getName(p.conceptType) == 'ipskill':
+                result.append(adapted(p))
+        return result
+
+    def getRequiredIPSkills(self, person):
+        result = []
+        for p in person.getParents():
+            job = adapted(p)
+            if IJobPosition.providedBy(job):
+                requirements = job.getIPSkillsRequired().requirements
+                for item in requirements.values():
+                    if item.get('selected'):
+                        result.append(util.getObjectForUid(item['uid']))
+        return result

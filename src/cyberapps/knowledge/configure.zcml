@@ -65,6 +65,16 @@
              set_schema="cyberapps.knowledge.interfaces.ISkillsRecorded" />
   </zope:class>
 
+  <zope:adapter factory="cyberapps.knowledge.data.IPSkillsQuestionnaire"
+                provides="cyberapps.knowledge.interfaces.IIPSkillsQuestionnaire" 
+                trusted="True" />
+  <zope:class class="cyberapps.knowledge.data.IPSkillsQuestionnaire">
+    <require permission="zope.View"
+             interface="cyberapps.knowledge.interfaces.IIPSkillsQuestionnaire" />
+    <require permission="zope.ManageContent"
+             set_schema="cyberapps.knowledge.interfaces.IIPSkillsQuestionnaire" />
+  </zope:class>
+
   <include package=".browser" />
 
 </configure>
