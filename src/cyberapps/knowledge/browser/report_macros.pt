@@ -207,9 +207,12 @@
                   <tr>
                     <td style="border-left: 1px solid #dddddd;
                                border-right: 1px solid #dddddd;
-                               text-align: center; width: 20%; padding: 0"
-                        tal:repeat="num python:range(1, 6)"
-                        tal:content="python:child['expected'] == num and 'O' or ''" />
+                               text-align: center; width: 20%; padding: 0;
+                               height: 18px"
+                        tal:repeat="num python:range(1, 6)">
+                      <img src="/@@/cybertools.icons/ledred.png"
+                           tal:condition="python:child['expected'] == num" />
+                    </td>
                   </tr>
                 </table>
               </td>
@@ -225,9 +228,12 @@
                   <tr>
                     <td style="border-left: 1px solid #dddddd;
                                border-right: 1px solid #dddddd;
-                               text-align: center; width: 20%; padding: 0"
-                        tal:repeat="num python:range(1, 6)"
-                        tal:content="python:row['value'] == num and 'X' or ''" />
+                               text-align: center; width: 20%; padding: 0;
+                               height: 18px"
+                        tal:repeat="num python:range(1, 6)">
+                      <img src="/@@/cybertools.icons/ledgreen.png"
+                           tal:condition="python:row['value'] == num" />
+                    </td>
                   </tr>
                 </table>
               </td>
