@@ -337,12 +337,17 @@
       <span i18n:translate="label_ipskills_number_selected">
         Number of currently selected skills:</span>
       <span id="ipskills_number_selected"
+            tal:attributes="style python:item.numberSelected > 15 and
+                   'color: Red' or ''"
             tal:content="item/numberSelected" />
     </div>
     <script>
       function updateNumberSelected(obj) {
-        var node = dojo.byId('ipskills_number_selected').childNodes[0];
-        node.textContent = parseInt(node.textContent) + (obj.checked ? 1 : -1);
+        var node = dojo.byId('ipskills_number_selected');
+        var value = parseInt(node.textContent);
+        var newValue = value + (obj.checked ? 1 : -1);
+        node.childNodes[0].textContent = newValue;
+        node.setAttribute('style', 'color: ' + (newValue > 15 ? 'Red' : 'Black'));
       }
     </script>
     <table style="width: auto"
