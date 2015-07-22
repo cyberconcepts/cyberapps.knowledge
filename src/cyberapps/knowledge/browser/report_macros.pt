@@ -219,7 +219,7 @@
             </tr>
             <tr tal:repeat="row child/selfInput"
                 tal:attributes="style python:
-                      repeat['row'].end and 'border-bottom: 1px solid #dddddd'">
+                  repeat['row'].end() and 'border-bottom: 1px solid #dddddd' or None">
               <td />
               <td style="padding-top: 0; padding-bottom: 0"
                   tal:content="row/name" />
@@ -243,6 +243,7 @@
       </table>
     </tal:ipskills>
   </div>
+  <br />
 </metal:jobrep>
 
 
