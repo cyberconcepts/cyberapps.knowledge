@@ -303,6 +303,8 @@ class QualificationsForm(PersonView):
                             title=subitem.title))
             for row in adapted(obj).data.values():
                 key = row[0]
+                if len(row) < 6:
+                    continue
                 value = dataRow.get('qu_' + key) or (3 * [u''])
                 item['schema'].append(dict(                            
                             key=key, label=row[1], 

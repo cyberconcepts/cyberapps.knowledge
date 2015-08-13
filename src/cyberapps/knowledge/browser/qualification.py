@@ -308,6 +308,8 @@ class JPDescForm(PositionView):
         result['header'] = data['header']
         adminDT = adapted(self.conceptManager['jpdesc_administrative'])
         for row in adminDT.data.values():
+            if len(row) < 4:
+                continue
             key, label, desc, optional = row
             dataRow = data['administrative'].get(key) or {}
             result['administrative'].append(
@@ -316,6 +318,8 @@ class JPDescForm(PositionView):
                      inactive=dataRow.get('inactive')))
         workdescDT = adapted(self.conceptManager['jpdesc_workdesc'])
         for row in workdescDT.data.values():
+            if len(row) < 4:
+                continue
             key, label, desc, optional = row
             dataRow = data['workdesc'].get(key) or {}
             result['workdesc'].append(
@@ -380,6 +384,8 @@ class QualificationsForm(PositionView):
                             uid=util.getUidForObject(subitem),
                             title=subitem.title))
             for row in adapted(obj).data.values():
+                if len(row) < 6:
+                    continue
                 key = row[0]
                 value = dataRow.get('qu_' + key) or (3 * [u''])
                 item['schema'].append(dict(                            

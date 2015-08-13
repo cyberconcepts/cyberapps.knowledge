@@ -190,8 +190,10 @@ class IPSkillsQuestionnaire(Questionnaire):
         for p in person.getParents():
             job = adapted(p)
             if IJobPosition.providedBy(job):
-                requirements = job.getIPSkillsRequired().requirements
-                for item in requirements.values():
-                    if item.get('selected'):
-                        result.append(util.getObjectForUid(item['uid']))
+                ipskills = job.getIPSkillsRequired()
+                if ipskills is not None:
+                    requirements = ipskills.requirements
+                    for item in requirements.values():
+                        if item.get('selected'):
+                            result.append(util.getObjectForUid(item['uid']))
         return result

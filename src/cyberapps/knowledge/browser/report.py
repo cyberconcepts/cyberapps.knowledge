@@ -117,6 +117,8 @@ class JobDescription(ReportBaseView, JPDescForm):
                         value=dataRow.get('value') or (3 * [u'']),
                         req=dataRow.get('req') or (3 * [u'0']))
             for row in adapted(obj).data.values():
+                if len(row) < 5:
+                    continue
                 key = row[0]
                 value = dataRow.get('qu_' + key) or (3 * [u''])
                 item['schema'].append(dict(                            
