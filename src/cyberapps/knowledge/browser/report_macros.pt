@@ -172,11 +172,74 @@
   <metal:block use-macro="view/concept_macros/concepttitle" />
   <div tal:define="data item/getData;
                    texts item/getTexts">
+    <tal:qualifications define="fname string:qualifications">
+      <h2><span i18n:translate="label_qualifications" /></h2>
+      <table class="jpdesc_qualif">
+        <tal:quitem repeat="row data/?fname">
+          <tr><td colspan="3">&nbsp;</td></tr>
+          <tr>
+            <td colspan="3">
+                <span class="label"
+                      tal:content="row/label" />
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <b i18n:translate="qualifications_required">Required</b>
+            </td></tr>
+          <tal:group repeat="field python:row['schema'] or [None]">
+            <tr class="grid"
+                tal:condition="field">
+              <td tal:content="field/label" />
+              <td tal:content="field/level" />
+              <td i18n:translate="">label_requirement</td>
+            </tr>
+            <tal:row repeat="textRow python:range(3)">
+              <tr class="grid"
+                  tal:define="value python:row['value'][textRow]"
+                  tal:condition="value">
+                <td class="input"
+                    tal:attributes="colspan python:field and '1' or '2'"
+                    tal:content="value">
+                </td>
+                <td class="input"
+                    tal:condition="field"
+                    tal:content="python:field['value'][textRow]">
+                </td>
+                <td class="input"
+                    i18n:translate=""
+                    tal:define="value python:row['req'][textRow]"
+                    tal:content="string:option_req_$value">
+                </td>
+              </tr>
+            </tal:row>
+          </tal:group>
+          <tal:person repeat="personRow row/personData">
+            <tr colspan="3">
+              <td><b tal:content="personRow/name" /></td>
+            </tr>
+            <tal:group repeat="field python:row['schema'] or [None]">
+              <tal:row repeat="textRow python:range(3)">
+                <tr class="grid"
+                    tal:define="value python:personRow['value'][textRow]"
+                    tal:condition="value">
+                  <td tal:attributes="colspan python:field and '1' or '2'"
+                      tal:content="value"></td>
+                  <td tal:condition="field"
+                      tal:content="python:personRow['qu_'+field['key']][textRow]">
+                  </td>
+                  <td tal:content="python:personRow['cert'][textRow]"></td>
+                </tr>
+              </tal:row>
+            </tal:group>
+          </tal:person>
+        </tal:quitem>
+      </table>
+    </tal:qualifications>
+    <br />
     <tal:ipskills define="fname string:ipskills">
-      <script lang="javascript">
-      </script>
+      <h2><span i18n:translate="label_ipskills" /></h2>
       <table style="width: 100%">
-        <div id="chartNode" style="width: 450px" />
         <tal:group repeat="parent data/?fname">
           <tr><td colspan="3" />&nbsp;</tr>
           <tr>

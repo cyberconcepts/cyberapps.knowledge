@@ -30,7 +30,8 @@ from loops import util
 from cyberapps.knowledge.browser.qualification import \
         JobPositionsOverview, PositionView, JPDescForm
 from cyberapps.knowledge.browser.qualification import template as baseTemplate
-                                    
+from cyberapps.knowledge.interfaces import IQualificationsRecorded
+
 
 template = ViewPageTemplateFile('report_macros.pt')
 
@@ -149,6 +150,7 @@ class JobReport(ReportBaseView, PositionView):
     macroName = 'job_report'
     parentName = 'qkb'
 
+    qualificationData = None
     selfInputQuestionnaire = None
     selfInputData = None
 
@@ -158,13 +160,36 @@ class JobReport(ReportBaseView, PositionView):
         result = dict(qualifications=[], ipskills=[])
         reqData = dict(qualifications={}, ipskills={})
         persons = self.adapted.getPersons()
-        # load data
+        # load requirement data
         qureq = adapted(self.target).getQualificationsRequired()
         if qureq is not None:
             reqData['qualifications'] = qureq.requirements
         skillsreq = adapted(self.target).getIPSkillsRequired()
         if skillsreq is not None:
             reqData['ipskills'] = skillsreq.requirements
+        # qualification data
+        qualifications = self.conceptManager['qualifications']
+        for obj in qualifications.getChildren([self.defaultPredicate]):
+            qualification = adapted(obj)
+            uid = qualification.uid
+            dataRow = reqData['qualifications'].get(uid) or {}
+            personData = self.getQualificationData(uid, persons)
+            item = dict(key=uid, label=qualification.title, 
+                        desc=qualification.description, schema=[],
+                        value=dataRow.get('value') or (3 * [u'']),
+                        req=dataRow.get('req') or (3 * [u'0'],),
+                        personData=personData)
+            for row in qualification.data.values():
+                if len(row) < 5:
+                    continue
+                key = row[0]
+                value = dataRow.get('qu_' + key) or (3 * [u''])
+                item['schema'].append(dict(                            
+                            key=key, label=row[1], 
+                            level=row[2], type=row[4], 
+                            value=value))
+            result['qualifications'].append(item)
+        # ipskills data
         ipskills = self.conceptManager['ipskills']
         for parent in ipskills.getChildren([self.defaultPredicate]):
             uid = util.getUidForObject(parent)
@@ -174,7 +199,7 @@ class JobReport(ReportBaseView, PositionView):
                 uid = util.getUidForObject(child)
                 row = reqData['ipskills'].get(uid) or {}
                 if row.get('selected'):
-                    selfInput = self.getSelfInput(child, persons)
+                    selfInput = self.getIPSkillsSelfInput(child, persons)
                     item['skills'].append(
                         dict(uid=uid, label=child.title,
                              description=child.description,
@@ -183,7 +208,26 @@ class JobReport(ReportBaseView, PositionView):
             result['ipskills'].append(item)
         return result
 
-    def getSelfInput(self, competence, persons):
+    def getQualificationData(self, quUid, persons):
+        result = []
+        personUids = [p.uid for p in persons]
+        if self.qualificationData is None:
+            self.qualificationData = {}
+            for p in persons:
+                for c in baseObject(p).getChildren():
+                    obj = adapted(c)
+                    if IQualificationsRecorded.providedBy(obj):
+                        self.qualificationData[p.uid] = obj.data
+                        break
+                else:
+                    self.qualificationData[p.uid] = {}
+        for p in persons:
+            item = dict(name=p.title)
+            item.update(self.qualificationData[p.uid].get(quUid) or {})
+            result.append(item)
+        return result
+
+    def getIPSkillsSelfInput(self, competence, persons):
         result = []
         personUids = [p.uid for p in persons]
         questionGroup = None
