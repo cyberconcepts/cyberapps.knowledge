@@ -226,7 +226,7 @@
                     tal:condition="python:
                         repeat['textRow'].start() or value">
                   <td tal:attributes="colspan python:field and '1' or '2'"
-                      tal:content="structure python:value or '&nbsp;'"></td>
+                      tal:content="structure python:value or u'&nbsp;'">blubb</td>
                   <td tal:condition="field"
                       tal:content="python:personRow['qu_'+field['key']][textRow]">
                   </td>
