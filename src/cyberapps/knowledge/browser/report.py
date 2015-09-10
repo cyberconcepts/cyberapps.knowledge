@@ -222,9 +222,11 @@ class JobReport(ReportBaseView, PositionView):
                 else:
                     self.qualificationData[p.uid] = {}
         for p in persons:
-            item = dict(name=p.title)
-            item.update(self.qualificationData[p.uid].get(quUid) or {})
-            result.append(item)
+            data = self.qualificationData[p.uid].get(quUid) or {}
+            if data:
+                item = dict(name=p.title)
+                item.update(data)
+                result.append(item)
         return result
 
     def getIPSkillsSelfInput(self, competence, persons):
