@@ -192,12 +192,13 @@
                 tal:condition="field">
               <td tal:content="field/label" />
               <td tal:content="field/level" />
-              <td i18n:translate="">label_requirement</td>
+              <td></td>
             </tr>
             <tal:row repeat="textRow python:range(3)">
               <tr class="grid"
                   tal:define="value python:row['value'][textRow]"
-                  tal:condition="value">
+                  tal:condition="python:
+                      repeat['textRow'].start() or value">
                 <td class="input"
                     tal:attributes="colspan python:field and '1' or '2'"
                     tal:content="value">
@@ -222,13 +223,19 @@
               <tal:row repeat="textRow python:range(3)">
                 <tr class="grid"
                     tal:define="value python:personRow['value'][textRow]"
-                    tal:condition="value">
+                    tal:condition="python:
+                        repeat['textRow'].start() or value">
                   <td tal:attributes="colspan python:field and '1' or '2'"
-                      tal:content="value"></td>
+                      tal:content="structure python:value or '&nbsp;'"></td>
                   <td tal:condition="field"
                       tal:content="python:personRow['qu_'+field['key']][textRow]">
                   </td>
-                  <td tal:content="python:personRow['cert'][textRow]"></td>
+                  <td tal:define="value python:personRow['cert'][textRow]">
+                    <tal:value condition="value">
+                      <span i18n:translate="label_certificate">Certificate</span>:
+                      <span tal:content="value" />
+                    </tal:value>
+                  </td>
                 </tr>
               </tal:row>
             </tal:group>
