@@ -177,7 +177,7 @@ class JobReport(ReportBaseView, PositionView):
             item = dict(key=uid, label=qualification.title, 
                         desc=qualification.description, schema=[],
                         value=dataRow.get('value') or (3 * [u'']),
-                        req=dataRow.get('req') or (3 * [u'0'],),
+                        req=dataRow.get('req') or (3 * [u'0']),
                         personData=personData)
             for row in qualification.data.values():
                 if len(row) < 5:
