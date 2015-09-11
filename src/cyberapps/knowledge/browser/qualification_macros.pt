@@ -24,8 +24,15 @@
             <a tal:attributes="href python:view.getUrlForTarget(pos)"
                tal:content="pos/title" />
             <span style="position: absolute; right: 5px">
-              <a title="copy job position"
-                 i18n:attributes="title"
+              <a title="delete job position" onclick="onclick_delete_jobposition"
+                 tal:condition="pos/deleteUrl"
+                 i18n:attributes="title; onclick"
+                 tal:attributes="href pos/deleteUrl">
+                <img tal:attributes="src 
+                            string:${resourceBase}cybertools.icons/page_delete.png" />
+              </a>
+              <a title="copy job position" onclick="onclick_copy_jobposition"
+                 i18n:attributes="title; onclick"
                  tal:attributes="href pos/copyUrl">
                 <img tal:attributes="src 
                             string:${resourceBase}cybertools.icons/page_copy.png" />

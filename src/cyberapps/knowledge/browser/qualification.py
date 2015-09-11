@@ -188,9 +188,19 @@ class PositionView(QualificationBaseView, ConceptView):
                 parent = p
         return self.nodeView.getViewForTarget(parent)
 
+    @Lazy
     def copyUrl(self):
         return '%s/copy_jpprofiles' % (self.nodeView.getUrlForTarget(self.context))
 
+    @Lazy
+    def deleteUrl(self):
+        #for f in (self.jpDescription, self.ipskillsRequired, 
+        #          self.qualificationsRequired):
+        #    if f['state'] != 'none':
+        #        return None
+        return '%s/del_jobposition' % (self.nodeView.getUrlForTarget(self.context))
+
+    @Lazy
     def jpDescription(self):
         jpDesc = adapted(self.target).getJPDescription()
         if jpDesc is None:
@@ -203,8 +213,9 @@ class PositionView(QualificationBaseView, ConceptView):
             text = stf.getStateObject().title
         action = 'edit_jpdescription.html'
         editUrl = '%s/%s' % (self.nodeView.getUrlForTarget(self.context), action)
-        return dict(text=text, editUrl=editUrl)
+        return dict(text=text, editUrl=editUrl, state=state)
 
+    @Lazy
     def ipskillsRequired(self):
         ipsReq = adapted(self.target).getIPSkillsRequired()
         if ipsReq is None:
@@ -218,8 +229,10 @@ class PositionView(QualificationBaseView, ConceptView):
         action = 'edit_ipskillsreq.html'
         editUrl = '%s/%s' % (self.nodeView.getUrlForTarget(self.context), action)
         ipskillsUrl = None
-        return dict(text=text, editUrl=editUrl, ipskillsUrl=ipskillsUrl)
+        return dict(text=text, editUrl=editUrl, ipskillsUrl=ipskillsUrl, 
+                    state=state)
 
+    @Lazy
     def qualificationsRequired(self):
         quReq = adapted(self.target).getQualificationsRequired()
         if quReq is None:
@@ -232,8 +245,9 @@ class PositionView(QualificationBaseView, ConceptView):
             text = stf.getStateObject().title
         action = 'edit_qualificationsreq.html'
         editUrl = '%s/%s' % (self.nodeView.getUrlForTarget(self.context), action)
-        return dict(text=text, editUrl=editUrl)
+        return dict(text=text, editUrl=editUrl, state=state)
 
+    @Lazy
     def ipskills(self):
         #action = 'edit_ipskills.html'
         #editUrl = '%s/%s' % (self.nodeView.getUrlForTarget(self.context), action)
@@ -241,9 +255,30 @@ class PositionView(QualificationBaseView, ConceptView):
         return dict(text='to be done')  #, editUrl=editUrl, ipskillsUrl=ipskillsUrl)
 
 
+class DeleteJobPosition(PositionView):
+
+    isToplevel = True
+    parentName = 'data_entry'
+        
+    def __call__(self):
+        obj = self.adapted
+        jobdesc = obj.getJPDescription()
+        ipskills = obj.getIPSkillsRequired()
+        qualif = obj.getQualificationsRequired()
+        for subobj in (jobdesc, ipskills, qualif):
+            if subobj is not None:
+                name = getName(baseObject(subobj))
+                del self.conceptManager[name]
+        targetUrl = self.breadcrumbsParent.targetUrl
+        name = getName(self.context)
+        del self.conceptManager[name]
+        return self.request.response.redirect(targetUrl)
+
+
 class CopyJPProfiles(PositionView):
 
     isToplevel = True
+    parentName = 'data_entry'
         
     def __call__(self):
         source = self.adapted

@@ -22,6 +22,12 @@
         permission="zope.View" />
 
   <browser:page 
+        name="del_jobposition"
+        for="loops.interfaces.IConceptSchema"
+        class="cyberapps.knowledge.browser.qualification.DeleteJobPosition"
+        permission="zope.View" />
+
+  <browser:page 
         name="copy_jpprofiles"
         for="loops.interfaces.IConceptSchema"
         class="cyberapps.knowledge.browser.qualification.CopyJPProfiles"
