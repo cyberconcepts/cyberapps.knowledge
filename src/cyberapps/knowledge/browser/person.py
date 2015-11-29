@@ -370,9 +370,9 @@ class SkillsForm(QualificationsForm):
                     value=data.get('value') or [],
                     exp=data.get('exp') or [],
                     int=data.get('int') or [])
-        fill(item['value'], u'', 10)
-        fill(item['exp'], u'0', 10)
-        fill(item['int'], u'0', 10)
+        fill(item['value'], u'', 15)
+        fill(item['exp'], u'0', 15)
+        fill(item['int'], u'0', 15)
         for subitem in obj.getChildren([self.defaultPredicate]):
             item['subitems'].append(dict(
                         uid=util.getUidForObject(subitem),

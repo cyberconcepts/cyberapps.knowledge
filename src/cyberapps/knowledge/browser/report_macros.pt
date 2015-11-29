@@ -280,7 +280,7 @@
                                text-align: center; width: 20%; padding: 0;
                                height: 18px"
                         tal:repeat="num python:range(1, 6)">
-                      <img src="/@@/cybertools.icons/ledred.png"
+                      <img src="/@@/cybertools.icons/ledyellow.png"
                            tal:condition="python:child['expected'] == num" />
                     </td>
                   </tr>

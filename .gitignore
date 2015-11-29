@@ -1,4 +1,6 @@
 *.pyc
+*.pyo
+*.egg-info
 *.project
 *.pydevproject
 *.sublime-project

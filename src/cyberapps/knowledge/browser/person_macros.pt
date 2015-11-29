@@ -268,7 +268,7 @@
         <tal:quitem define="row data"
                     condition="row">
           <tr class="grid"
-              tal:repeat="textRow python:range(10)">
+              tal:repeat="textRow python:range(15)">
             <td>
               <input type="hidden"
                      tal:attributes="name string:$fname:list;
