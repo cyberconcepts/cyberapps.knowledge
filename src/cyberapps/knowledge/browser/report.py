@@ -245,6 +245,8 @@ class JobReport(ReportBaseView, PositionView):
                 if qu.questionnaireType == 'standard':
                     self.selfInputQuestionnaire = qu
                     break
+        if self.selfInputQuestionnaire is None:
+            return result
         if self.selfInputData is None:
             self.selfInputData = {}
             for uid in personUids:
