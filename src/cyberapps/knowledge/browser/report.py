@@ -152,6 +152,7 @@ class JobReport(ReportBaseView, PositionView):
 
     qualificationData = None
     selfInputQuestionnaire = None
+    selfInputQuGroups = None
     selfInputData = None
 
     def getData(self):
@@ -236,14 +237,17 @@ class JobReport(ReportBaseView, PositionView):
         for c in baseObject(competence).getChildren():
             qug = adapted(c)
             if IQuestionGroup.providedBy(qug):
-                questionGroup = qug
-                break
+                if (self.selfInputQuGroups is None or 
+                        qug in self.selfInputQuGroups):
+                    questionGroup = qug
+                    break
         if questionGroup is None:
             return result
         if self.selfInputQuestionnaire is None:
             for qu in questionGroup.getQuestionnaires():
                 if qu.questionnaireType == 'standard':
                     self.selfInputQuestionnaire = qu
+                    self.selfInputQuGroups = qu.questionGroups
                     break
         if self.selfInputQuestionnaire is None:
             return result
