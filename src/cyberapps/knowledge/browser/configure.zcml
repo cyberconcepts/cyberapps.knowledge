@@ -78,6 +78,14 @@
         permission="zope.View" />
 
   <zope:adapter
+        name="referred_listing.html"
+        for="loops.interfaces.IConcept
+             zope.publisher.interfaces.browser.IBrowserRequest"
+        provides="zope.interface.Interface"
+        factory="cyberapps.knowledge.browser.person.ReferredListing"
+        permission="zope.View" />
+
+  <zope:adapter
         name="jobdescription.html"
         for="loops.interfaces.IConcept
              zope.publisher.interfaces.browser.IBrowserRequest"

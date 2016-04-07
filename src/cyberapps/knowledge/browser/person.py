@@ -217,6 +217,26 @@ class PersonView(QualificationBaseView, ConceptView):
                 return obj
 
 
+class ReferredListing(JobPersonsOverview):
+
+    macroName = 'referred_listing'
+
+    @Lazy
+    def persons(self):
+        self.setupController()
+        for ch in self.context.getChildren([self.defaultPredicate]):
+            if IQuestionnaire.providedBy(adapted(ch)):
+                baseUrl = self.nodeView.getUrlForTarget(ch)
+                break
+        else:
+            return [dict(title='Questionnaire missing')]
+        result = [adapted(p) for p in self.institution.getChildren()]
+        result = [dict(title=p.title, 
+                       url='%s?person=%s' % (baseUrl, p.uid)) 
+                    for p in result if IPerson.providedBy(p)]
+        return result
+
+
 class JobAssignmentsForm(PersonView):
     """ Form for assigning jobs to a person.
     """

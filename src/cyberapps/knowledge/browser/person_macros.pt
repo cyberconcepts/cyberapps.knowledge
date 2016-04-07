@@ -118,6 +118,26 @@
 </metal:person>
 
 
+<metal:referred define-macro="referred_listing"
+               tal:define="dummy item/update">
+  <metal:block use-macro="view/concept_macros/concepttitle" />
+  <metal:buttons use-macro="item/knowledge_macros/select_institution" />
+  <form method="post">
+    <table class="grid"
+           tal:define="persons item/persons">
+      <tr tal:repeat="person persons">
+        <td>
+          <a tal:attributes="href person/url|nothing"
+             tal:content="person/title" /> 
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+    <div metal:use-macro="item/baseTemplate/macros/backbutton" />
+  </form>
+</metal:referred>
+
+
 <metal:form define-macro="jobassignmentsform"
             tal:define="show item/update">
   <tal:show condition="show">
