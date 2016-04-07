@@ -230,7 +230,9 @@ class ReferredListing(JobPersonsOverview):
                 break
         else:
             return [dict(title='Questionnaire missing')]
-        result = [adapted(p) for p in self.institution.getChildren()]
+        me = getPersonForUser(self.context, self.request)
+        result = [adapted(p) for p in self.institution.getChildren()
+                             if p != me]
         result = [dict(title=p.title, 
                        url='%s?person=%s' % (baseUrl, p.uid)) 
                     for p in result if IPerson.providedBy(p)]
