@@ -151,8 +151,10 @@ class JobReport(ReportBaseView, PositionView):
     parentName = 'qkb'
 
     qualificationData = None
-    selfInputQuestionnaire = None
-    selfInputQuGroups = None
+    questionnaires = None
+    quGroups = None
+    #selfInputQuestionnaire = None
+    #selfInputQuGroups = None
     selfInputData = None
 
     def getData(self):
@@ -237,24 +239,17 @@ class JobReport(ReportBaseView, PositionView):
         for c in baseObject(competence).getChildren():
             qug = adapted(c)
             if IQuestionGroup.providedBy(qug):
-                if (self.selfInputQuGroups is None or 
-                        qug in self.selfInputQuGroups):
+                questionnaire = self.getQuestionnaire(qug, 'standard')
+                if (questionnaire is not None and 
+                        qug in self.quGroups.get('standard')):
                     questionGroup = qug
                     break
         if questionGroup is None:
             return result
-        if self.selfInputQuestionnaire is None:
-            for qu in questionGroup.getQuestionnaires():
-                if qu.questionnaireType == 'standard':
-                    self.selfInputQuestionnaire = qu
-                    self.selfInputQuGroups = qu.questionGroups
-                    break
-        if self.selfInputQuestionnaire is None:
-            return result
         if self.selfInputData is None:
             self.selfInputData = {}
             for uid in personUids:
-                respManager = Responses(baseObject(self.selfInputQuestionnaire))
+                respManager = Responses(baseObject(questionnaire))
                 self.selfInputData[uid] = respManager.load(uid)
         for idx, uid in enumerate(personUids):
             person = persons[idx]
@@ -265,3 +260,16 @@ class JobReport(ReportBaseView, PositionView):
                     result.append(dict(name=person.title, 
                                        value=int(round(value * 4 + 1))))
         return result
+
+    def getQuestionnaire(self, quGroup, quType):
+        if self.questionnaires is None:
+            self.questionnaires = {}
+            self.quGroups = {}
+        if quType in self.questionnaires:
+            return self.questionnaires[quType]
+        for qu in quGroup.getQuestionnaires():
+            if qu.questionnaireType == quType:
+                self.questionnaires[quType] = qu
+                self.quGroups[quType] = qu.questionGroups
+                break
+        return self.questionnaires.get(quType)
