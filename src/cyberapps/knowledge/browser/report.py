@@ -153,9 +153,7 @@ class JobReport(ReportBaseView, PositionView):
     qualificationData = None
     questionnaires = None
     quGroups = None
-    #selfInputQuestionnaire = None
-    #selfInputQuGroups = None
-    selfInputData = None
+    ipskillsInputData = None
 
     def getData(self):
         self.setupController()
@@ -202,12 +200,12 @@ class JobReport(ReportBaseView, PositionView):
                 uid = util.getUidForObject(child)
                 row = reqData['ipskills'].get(uid) or {}
                 if row.get('selected'):
-                    selfInput = self.getIPSkillsSelfInput(child, persons)
+                    ipskillsInput = self.getIPSkillsInput(child, persons)
                     item['skills'].append(
                         dict(uid=uid, label=child.title,
                              description=child.description,
                              expected=int(row.get('expected') or 0) + 1,
-                             selfInput=selfInput))
+                             ipskillsInput=ipskillsInput))
             result['ipskills'].append(item)
         return result
 
@@ -232,7 +230,7 @@ class JobReport(ReportBaseView, PositionView):
                 result.append(item)
         return result
 
-    def getIPSkillsSelfInput(self, competence, persons):
+    def getIPSkillsInput(self, competence, persons):
         result = []
         personUids = [p.uid for p in persons]
         questionGroup = None
@@ -243,22 +241,39 @@ class JobReport(ReportBaseView, PositionView):
                 if (questionnaire is not None and 
                         qug in self.quGroups.get('standard')):
                     questionGroup = qug
-                    break
-        if questionGroup is None:
+                else:
+                    refQuestionnaire = self.getQuestionnaire(qug, 'person')
+                    if (refQuestionnaire is not None and 
+                            qug in self.quGroups.get('person')):
+                        refQuestionGroup = qug
+                    #break
+        if questionGroup is None and refQuestionGroup is None:
             return result
-        if self.selfInputData is None:
-            self.selfInputData = {}
+        if self.ipskillsInputData is None:
+            self.ipskillsInputData = {}
             for uid in personUids:
                 respManager = Responses(baseObject(questionnaire))
-                self.selfInputData[uid] = respManager.load(uid)
+                self.ipskillsInputData[uid] = respManager.load(uid)
+                refRespManager = Responses(baseObject(refQuestionnaire))
+                self.ipskillsInputData[uid].update(
+                            refRespManager.loadRange(uid + '.*'))
         for idx, uid in enumerate(personUids):
             person = persons[idx]
-            data = self.selfInputData.get(uid)
+            data = self.ipskillsInputData.get(uid)
             if data is not None:
                 value = data.get(questionGroup.uid)
+                refValues = data.get(refQuestionGroup.uid)
+                if value is None and refValues is None:
+                    continue
+                item = dict(name=person.title, value=None,
+                            refValues=dict(values=[], avg=None))
                 if value is not None:
-                    result.append(dict(name=person.title, 
-                                       value=int(round(value * 4 + 1))))
+                    item['value']=int(round(value * 4 + 1))
+                if refValues:
+                    refValues = [int(round(v * 4 + 1)) for v in refValues]
+                    avg = int(round(sum(refValues) / len(refValues)))
+                    item['refValues']=dict(values=refValues, avg=avg)
+                result.append(item)
         return result
 
     def getQuestionnaire(self, quGroup, quType):

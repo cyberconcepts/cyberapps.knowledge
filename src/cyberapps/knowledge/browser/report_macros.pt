@@ -252,6 +252,7 @@
           <tr>
             <td style="padding-bottom: 6px; font-size: 120%">
               <b tal:content="parent/label" /></td>
+            <td />
             <td style="vertical-align: bottom"></td>
             <td style="vertical-align: bottom; text-align: right; 
                        padding: 0">
@@ -272,6 +273,7 @@
               <td style="padding-top: 0; padding-bottom: 0">
                 <div i18n:translate="ipskills_required">Required</div>
               </td>
+              <td />
               <td style="width: 200px; padding: 0">
                 <table width="100%">
                   <tr>
@@ -287,12 +289,19 @@
                 </table>
               </td>
             </tr>
-            <tr tal:repeat="row child/selfInput"
+            <tr tal:repeat="row child/ipskillsInput"
                 tal:attributes="style python:
                   repeat['row'].end() and 'border-bottom: 1px solid #dddddd' or None">
               <td />
               <td style="padding-top: 0; padding-bottom: 0"
                   tal:content="row/name" />
+              <td style="padding-top: 0; padding-bottom: 0">
+                <tal:ref condition="row/refValues/values">
+                  <span tal:repeat="value row/refValues/values"
+                        tal:content="value" /> =
+                  <span tal:content="row/refValues/avg" />
+                </tal:ref>
+              </td>
               <td style="width: 200px; padding: 0">
                 <table width="100%">
                   <tr>
