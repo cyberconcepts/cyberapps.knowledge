@@ -233,7 +233,7 @@ class JobReport(ReportBaseView, PositionView):
     def getIPSkillsInput(self, competence, persons):
         result = []
         personUids = [p.uid for p in persons]
-        questionGroup = None
+        questionGroup = refQuestionGroup = None
         for c in baseObject(competence).getChildren():
             qug = adapted(c)
             if IQuestionGroup.providedBy(qug):
