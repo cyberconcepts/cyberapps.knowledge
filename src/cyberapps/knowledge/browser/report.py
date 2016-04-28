@@ -286,6 +286,6 @@ class JobReport(ReportBaseView, PositionView):
         for qu in quGroup.getQuestionnaires():
             if qu.questionnaireType == quType:
                 self.questionnaires[quType] = qu
-                self.quGroups[quType] = qu.questionGroups
+                self.quGroups[quType] = qu.getAllQuestionGroups()
                 break
         return self.questionnaires.get(quType)
