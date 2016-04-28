@@ -254,9 +254,10 @@ class JobReport(ReportBaseView, PositionView):
             for uid in personUids:
                 respManager = Responses(baseObject(questionnaire))
                 self.ipskillsInputData[uid] = respManager.load(uid)
-                refRespManager = Responses(baseObject(refQuestionnaire))
-                self.ipskillsInputData[uid].update(
-                            refRespManager.loadRange(uid + '.*'))
+                if refQuestionGroup is not None:
+                    refRespManager = Responses(baseObject(refQuestionnaire))
+                    self.ipskillsInputData[uid].update(
+                                refRespManager.loadRange(uid + '.*'))
         for idx, uid in enumerate(personUids):
             person = persons[idx]
             data = self.ipskillsInputData.get(uid)
