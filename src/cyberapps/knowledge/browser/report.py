@@ -263,7 +263,7 @@ class JobReport(ReportBaseView, PositionView):
             data = self.ipskillsInputData.get(uid)
             if data is not None:
                 value = data.get(questionGroup.uid)
-                refValues = data.get(refQuestionGroup.uid)
+                refValues = refQuestionGroup and data.get(refQuestionGroup.uid)
                 if value is None and refValues is None:
                     continue
                 item = dict(name=person.title, value=None,
