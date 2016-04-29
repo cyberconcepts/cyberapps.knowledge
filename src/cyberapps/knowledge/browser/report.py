@@ -1,5 +1,5 @@
 #
-#  Copyright (c) 2015 Helmut Merz helmutm@cy55.de
+#  Copyright (c) 2016 Helmut Merz helmutm@cy55.de
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ Definition of classes for viewing reporting data in cyberapps.knowledge.
 
 from zope.app.pagetemplate import ViewPageTemplateFile
 from zope.cachedescriptors.property import Lazy
+from zope.i18n import translate
+from zope.i18nmessageid import MessageFactory
 
 from loops.common import adapted, baseObject
 from loops.knowledge.survey.interfaces import IQuestionGroup
@@ -31,6 +33,8 @@ from cyberapps.knowledge.browser.qualification import \
         JobPositionsOverview, PositionView, JPDescForm
 from cyberapps.knowledge.browser.qualification import template as baseTemplate
 from cyberapps.knowledge.interfaces import IQualificationsRecorded
+
+_ = MessageFactory('cyberapps.knowledge')
 
 
 template = ViewPageTemplateFile('report_macros.pt')
@@ -232,6 +236,7 @@ class JobReport(ReportBaseView, PositionView):
 
     def getIPSkillsInput(self, competence, persons):
         result = []
+        lang = self.languageInfo.language
         personUids = [p.uid for p in persons]
         questionGroup = refQuestionGroup = None
         for c in baseObject(competence).getChildren():
@@ -267,13 +272,16 @@ class JobReport(ReportBaseView, PositionView):
                 if value is None and refValues is None:
                     continue
                 item = dict(name=person.title, value=None,
-                            refValues=dict(values=[], avg=None))
+                            refValues=dict(values=[], avg=None, vstr=None))
                 if value is not None:
                     item['value']=int(round(value * 4 + 1))
                 if refValues:
-                    refValues = [int(round(v * 4 + 1)) for v in refValues]
+                    refValues = sorted([int(round(v * 4 + 1)) for v in refValues])
                     avg = int(round(sum(refValues) / len(refValues)))
-                    item['refValues']=dict(values=refValues, avg=avg)
+                    vstr = '%s: %s' % (
+                        translate(_('label_refValues'), target_language=lang), 
+                        ', '.join(str(v) for v in refValues))
+                    item['refValues']=dict(values=refValues, avg=avg, vstr=vstr)
                 result.append(item)
         return result
 

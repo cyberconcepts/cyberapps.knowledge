@@ -252,7 +252,6 @@
           <tr>
             <td style="padding-bottom: 6px; font-size: 120%">
               <b tal:content="parent/label" /></td>
-            <td />
             <td style="vertical-align: bottom"></td>
             <td style="vertical-align: bottom; text-align: right; 
                        padding: 0">
@@ -273,7 +272,6 @@
               <td style="padding-top: 0; padding-bottom: 0">
                 <div i18n:translate="ipskills_required">Required</div>
               </td>
-              <td />
               <td style="width: 200px; padding: 0">
                 <table width="100%">
                   <tr>
@@ -295,23 +293,26 @@
               <td />
               <td style="padding-top: 0; padding-bottom: 0"
                   tal:content="row/name" />
-              <td style="padding-top: 0; padding-bottom: 0">
-                <tal:ref condition="row/refValues/values">
-                  <span tal:repeat="value row/refValues/values"
-                        tal:content="value" /> =
-                  <span tal:content="row/refValues/avg" />
-                </tal:ref>
-              </td>
               <td style="width: 200px; padding: 0">
                 <table width="100%">
-                  <tr>
+                  <tr tal:define="value row/value;
+                                  refAvg row/refValues/avg;
+                                  refStr row/refValues/vstr">
                     <td style="border-left: 1px solid #dddddd;
                                border-right: 1px solid #dddddd;
                                text-align: center; width: 20%; padding: 0;
                                height: 18px"
                         tal:repeat="num python:range(1, 6)">
-                      <img src="/@@/cybertools.icons/ledgreen.png"
-                           tal:condition="python:row['value'] == num" />
+                      <tal:separate condition="python:value != refAvg">
+                        <img src="/@@/cybertools.icons/ledgreen.png"
+                             tal:condition="python:value == num" />
+                        <img src="/@@/cybertools.icons/ledblue.png"
+                             tal:attributes="title refStr"
+                             tal:condition="python:refAvg == num" />
+                      </tal:separate>
+                      <img src="/@@/cybertools.icons/ledlightgreen.png"
+                           tal:attributes="title refStr"
+                           tal:condition="python:value == refAvg == num" />
                     </td>
                   </tr>
                 </table>
