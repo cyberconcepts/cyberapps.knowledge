@@ -173,7 +173,8 @@ class PersonView(QualificationBaseView, ConceptView):
         storage = self.loopsRoot['records']['survey_responses']
         tracks = storage.getUserTracks(qu.uid, 0, personUid)
         if tracks:
-            text = state = 'draft'
+            #text = state = 'draft'
+            text = state = tracks[0].data.get('state') or 'draft'
         editUrl = '%s?person=%s' % (
                         self.nodeView.getUrlForTarget(questionnaire), personUid)
         return dict(text=text, editUrl=editUrl)
