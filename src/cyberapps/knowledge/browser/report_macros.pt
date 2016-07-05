@@ -281,6 +281,7 @@
                                height: 18px"
                         tal:repeat="num python:range(1, 6)">
                       <img src="/@@/cybertools.icons/ledyellow.png"
+                           tal:attributes="title child/expStr"
                            tal:condition="python:child['expected'] == num" />
                     </td>
                   </tr>
@@ -296,6 +297,7 @@
               <td style="width: 200px; padding: 0">
                 <table width="100%">
                   <tr tal:define="value row/value;
+                                  valStr row/vstr;
                                   refAvg row/refValues/avg;
                                   refStr row/refValues/vstr">
                     <td style="border-left: 1px solid #dddddd;
@@ -305,13 +307,14 @@
                         tal:repeat="num python:range(1, 6)">
                       <tal:separate condition="python:value != refAvg">
                         <img src="/@@/cybertools.icons/ledgreen.png"
+                             tal:attributes="title valStr"
                              tal:condition="python:value == num" />
                         <img src="/@@/cybertools.icons/ledblue.png"
                              tal:attributes="title refStr"
                              tal:condition="python:refAvg == num" />
                       </tal:separate>
-                      <img src="/@@/cybertools.icons/ledlightgreen.png"
-                           tal:attributes="title refStr"
+                      <img src="/@@/cybertools.icons/ledgreenblue.png"
+                           tal:attributes="title string:$valStr;; $refStr"
                            tal:condition="python:value == refAvg == num" />
                     </td>
                   </tr>

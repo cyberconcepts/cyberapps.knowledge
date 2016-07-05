@@ -162,6 +162,7 @@ class JobReport(ReportBaseView, PositionView):
     def getData(self):
         self.setupController()
         self.registerDojoCharting()
+        lang = self.languageInfo.language
         result = dict(qualifications=[], ipskills=[])
         reqData = dict(qualifications={}, ipskills={})
         persons = self.adapted.getPersons()
@@ -205,10 +206,14 @@ class JobReport(ReportBaseView, PositionView):
                 row = reqData['ipskills'].get(uid) or {}
                 if row.get('selected'):
                     ipskillsInput = self.getIPSkillsInput(child, persons)
+                    v = int(row.get('expected') or 0) + 1
+                    vstr = '%s: %s' % (
+                        translate(_('ipskills_required'), target_language=lang), v)
                     item['skills'].append(
                         dict(uid=uid, label=child.title,
                              description=child.description,
-                             expected=int(row.get('expected') or 0) + 1,
+                             expected=v,
+                             expStr=vstr,
                              ipskillsInput=ipskillsInput))
             result['ipskills'].append(item)
         return result
@@ -274,7 +279,10 @@ class JobReport(ReportBaseView, PositionView):
                 item = dict(name=person.title, value=None,
                             refValues=dict(values=[], avg=None, vstr=None))
                 if value is not None:
-                    item['value']=int(round(value * 4 + 1))
+                    v = int(round(value * 4 + 1))
+                    item['value'] = v
+                    item['vstr'] = '%s: %s' % (
+                        translate(_('label_skillValues'), target_language=lang), v)
                 if refValues:
                     refValues = sorted([int(round(v * 4 + 1)) for v in refValues])
                     avg = int(round(sum(refValues) / len(refValues)))

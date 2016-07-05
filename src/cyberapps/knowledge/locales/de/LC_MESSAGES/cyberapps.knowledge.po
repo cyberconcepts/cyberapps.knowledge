@@ -3,7 +3,7 @@ msgstr ""
 
 "Project-Id-Version: 0.0.1\n"
 "POT-Creation-Date: 2014-08-08 12:00 CET\n"
-"PO-Revision-Date: 2016-04-29 12:00 CET\n"
+"PO-Revision-Date: 2016-07-05 12:00 CET\n"
 "Last-Translator: Helmut Merz <helmutm@cy55.de>\n"
 "Language-Team: cyberapps.knowledge developers <helmutm@cy55.de>\n"
 "MIME-Version: 1.0\n"
@@ -226,6 +226,9 @@ msgstr "Anforderungen"
 
 msgid "ipskills_required"
 msgstr "Soll-Wert"
+
+msgid "label_skillValues"
+msgstr "Selbsteinschätzung"
 
 msgid "label_refValues"
 msgstr "Fremdeinschätzung"
