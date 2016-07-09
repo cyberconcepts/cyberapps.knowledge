@@ -67,8 +67,11 @@ class JobPersonsOverview(QualificationBaseView, ConceptView):
     def persons(self):
         self.setupController()
         result = {}
-        result['master'] = [PersonView(p, self.request)
-                for p in self.institution.getChildren([self.masterPredicate])]
+        if self.options('hide_master'):
+            result ['master'] = []
+        else:
+            result['master'] = [PersonView(p, self.request)
+                    for p in self.institution.getChildren([self.masterPredicate])]
         result['member'] = [PersonView(p, self.request)
                 for p in self.institution.getChildren([self.memberPredicate])]
         result['other'] = [PersonView(p, self.request,)
