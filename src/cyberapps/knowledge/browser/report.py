@@ -166,6 +166,11 @@ class JobReport(ReportBaseView, PositionView):
         result = dict(qualifications=[], ipskills=[])
         reqData = dict(qualifications={}, ipskills={})
         persons = self.adapted.getPersons()
+        selectedPerson = self.request.form.get('person')
+        if selectedPerson:
+            p = adapted(util.getObjectForUid(selectedPerson))
+            if p in persons:
+                persons = [p]
         # load requirement data
         qureq = adapted(self.target).getQualificationsRequired()
         if qureq is not None:

@@ -170,6 +170,21 @@
 
 <metal:jobrep define-macro="job_report">
   <metal:block use-macro="view/concept_macros/concepttitle" />
+  <form method="get">
+    <span i18n:translate="select_person">Restrict report to person</span>:
+    <select name="person" id="select_person"
+            onchange="submit()"
+            tal:define="person request/person|nothing">
+      <option value=""
+              i18n:translate="all_persons">All persons</option>
+      <option tal:repeat="row item/adapted/getPersons"
+              tal:content="row/title"
+              tal:attributes="value row/uid;
+                              selected python:row.uid == person">
+      </option>
+    </select>
+  </form>
+  <br />
   <div tal:define="data item/getData;
                    texts item/getTexts">
     <tal:qualifications define="fname string:qualifications">
