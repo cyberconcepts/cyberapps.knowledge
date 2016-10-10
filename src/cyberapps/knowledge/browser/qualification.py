@@ -159,7 +159,7 @@ class JobPositionsOverview(QualificationBaseView, ConceptView):
         result = []
         self.setupController()
         self.registerDojoComboBox()
-        inst = self.institution
+        inst = baseObject(self.institution)
         if inst is not None:
             for child in inst.getChildren([self.defaultPredicate]):
                 if child.conceptType == self.jobPositionType:
