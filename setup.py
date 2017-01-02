@@ -1,33 +1,23 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0'
+version = '1.0.1'
 
-long_description = (
-    open('README.txt').read()
-    + '\n' +
-    'Contributors\n'
-    '============\n'
-    + '\n' +
-    open('CONTRIBUTORS.txt').read()
-    + '\n' +
-    open('CHANGES.txt').read()
-    + '\n')
+long_description = open('README.md').read()
 
 setup(name='cyberapps.knowledge',
       version=version,
-      description="knowledge management",
+      description="loops application providing knowledge management functionality",
       long_description=long_description,
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",
         ],
-      keywords='',
-      author='',
-      author_email='',
-      url='http://svn.plone.org/svn/collective/',
-      license='gpl',
+      author='cyberconcepts.org team',
+      author_email='team@cyberconcepts.org',
+      url='https://www.cyberconcepts.org',
+      license='GPL',
       packages=find_packages('src'),
       package_dir = {'': 'src'},
       namespace_packages=['cyberapps'],
@@ -35,6 +25,7 @@ setup(name='cyberapps.knowledge',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'loops',
           # -*- Extra requirements: -*-
       ],
       entry_points="""

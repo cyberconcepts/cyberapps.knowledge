@@ -1,0 +1,5 @@
+global-include *.css *.js
+global-include *.md *.txt
+global-include *.mo *.po *.pot
+global-include *.pt
+global-include *.zcml
